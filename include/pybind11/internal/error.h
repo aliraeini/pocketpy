@@ -46,7 +46,7 @@ inline auto raise_call(Args&&... args) {
         static_assert(dependent_false<type>, "invalid return type");
     }
 
-    bool o = py_matchexc(tp_Exception);
+    py_matchexc(tp_Exception);
     object e = object::from_ret();
     auto what = py_formatexc();
     py_clearexc(pc);

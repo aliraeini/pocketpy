@@ -202,6 +202,13 @@ if(PK_ENABLE_MIMALLOC)
     target_link_libraries(${PROJECT_NAME} mimalloc-static)
 endif()
 
+if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(${PROJECT_NAME} PRIVATE -w)
+endif()
+
+install(TARGETS ${PROJECT_NAME} DESTINATION lib)
+# install(DIRECTORY include/ DESTINATION include) # no need for this, there is a lot of warnings which we want to fix
+
 if(PK_BUILD_MATH_TESTS)
     enable_testing()
     # Compile the kernels directly so the test also works with DLL builds that

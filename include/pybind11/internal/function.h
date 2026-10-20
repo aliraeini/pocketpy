@@ -77,7 +77,7 @@ object interface<Derived>::operator() (Args&&... args) const {
     int argc = 0;
     int kwargsc = 0;
 
-    auto foreach = [&](auto&& argument) {
+    [[maybe_unused]] auto foreach = [&](auto&& argument) {
         using type = std::decay_t<decltype(argument)>;
         if constexpr(std::is_constructible_v<handle, type>) {
             argc += 1;
@@ -178,8 +178,8 @@ public:
     function_record& operator= (const function_record&) = delete;
 
     function_record(function_record&& other) noexcept {
-        std::memcpy(this, &other, sizeof(function_record));
-        std::memset(&other, 0, sizeof(function_record));
+        std::memcpy(static_cast<void*>(this), static_cast<const void*>(&other), sizeof(function_record));
+        std::memset(static_cast<void*>(&other), 0, sizeof(function_record));
     }
 
     function_record& operator= (function_record&&) = delete;
@@ -455,7 +455,7 @@ struct template_parser<Callable,
             if constexpr(args_pos == -1) { return false; }
         }
 
-        for(std::size_t i = 0; i < std::min(normal_argc, (int)args.size()); ++i) {
+        for(int i = 0; i < std::min(normal_argc, (int)args.size()); ++i) {
             stack[i] = args[i];
         }
 
@@ -473,7 +473,7 @@ struct template_parser<Callable,
         }
 
         // pack the kwargs
-        int index = 0;
+        std::size_t index = 0;
         if constexpr(named_argc != 0) {
             int arg_index = 0;
             while(arg_index < named_argc && index < kwargs.size()) {

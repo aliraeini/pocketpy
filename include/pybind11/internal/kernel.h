@@ -65,7 +65,7 @@ struct object_pool {
             return {py_tuple_getitem(pool, index), index};
         }
 
-        for(int i = 0; i < indices.size(); ++i) {
+        for(int i = 0; i < static_cast<int>(indices.size()); ++i) {
             if(indices[i] == 0) {
                 indices[i] = 1;
                 return {py_tuple_getitem(pool, i), i};
